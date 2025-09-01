@@ -1,0 +1,53 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Project warehouse {
+  database_type: 'PostgreSQL'
+  Note: 'Basic DB project about a warehouse of different kind of products. For educactional purpososes'
+}
+
+Table "clients" {
+  client_id int [pk, not null, increment]
+  name varchar(100) [not null]
+  email varchar(30) [not null, unique]
+  phone_number varchar(15)
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  modified_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table "products" {
+  product_id int [pk, not null, increment]
+  name varchar(50) [not null, unique]
+  slug varchar(50) [not null, unique]
+  description text
+  price double(8,2)
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  modified_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+enum bill_status {
+  open [note: 'Waiting to be processed']
+  partial
+  paid
+  closed
+}
+
+Table bill {
+  bill_id int [increment, pk, not null]
+  client_id int [not null]
+  total int [not null]
+  status bill_status [default: 'open']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  modified_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table bill_product {
+  bill_product_id int [not null, increment, pk]
+  product_id int [not null]
+  bill_id int [not null]
+  quantity int
+}
+
+Ref: bill.client_id > client.client_id
+Ref: bill_product.product_id > product.product_id
+Ref: bill_product.bill_id > bill.bill_id

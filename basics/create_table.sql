@@ -23,6 +23,17 @@ CREATE TABLE client(
     modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- a TRIGGER must be created for this update
 ); 
 
+-- if we want to alter the table in such a way that accomodates to the new data sceme:
+ALTER TABLE client
+ALTER COLUMN name TYPE VARCHAR(100),
+ALTER COLUMN name SET NOT NULL -- name will be limited to 100 characters and will not be null
+ALTER COLUMN email TYPE VARCHAR(100),
+ALTER COLUMN email SET NOT NULL ,
+ADD CONSTRAINT unique_email UNIQUE (email) ,-- email will be limited to 100 characters, not null and will be unique
+ALTER COLUMN phone_number DROP NOT NULL; -- erasing 'not null' constraint of phone_number field
+
+
+
 -- TRIGGER creation as a function
 CREATE OR REPLACE FUNCTION update_modified_at()
 RETURNS TRIGGER 
