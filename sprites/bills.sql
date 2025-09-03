@@ -1,20 +1,26 @@
-insert ignore into bills(bill_id,client_id) values  (1,'89743');
-insert ignore into bills(bill_id,client_id) values  (2,'91577');
-insert ignore into bills(bill_id,client_id) values  (3,'46843');
-insert ignore into bills(bill_id,client_id) values  (4,'67024');
-insert ignore into bills(bill_id,client_id) values  (5,'23159');
-insert ignore into bills(bill_id,client_id) values  (6,'73188');
-insert ignore into bills(bill_id,client_id) values  (7,'11977');
-insert ignore into bills(bill_id,client_id) values  (8,'83275');
-insert ignore into bills(bill_id,client_id) values  (9,'42466');
-insert ignore into bills(bill_id,client_id) values  (10,'28898');
-insert ignore into bills(bill_id,client_id) values  (11,'8303');
-insert ignore into bills(bill_id,client_id) values  (12,'60939');
-insert ignore into bills(bill_id,client_id) values  (13,'50651');
-insert ignore into bills(bill_id,client_id) values  (14,'71005');
-insert ignore into bills(bill_id,client_id) values  (15,'26902');
-insert ignore into bills(bill_id,client_id) values  (16,'59194');
-insert ignore into bills(bill_id,client_id) values  (17,'26073');
-insert ignore into bills(bill_id,client_id) values  (18,'6106');
-insert ignore into bills(bill_id,client_id) values  (19,'12723');
-insert ignore into bills(bill_id,client_id) values  (20,'54165');
+INSERT INTO bill(bill_id,client_id) 
+VALUES  
+    (1,'89743'),
+    (2,'91577'),
+    (3,'46843'),
+    (4,'67024'),
+    (5,'23159'),
+    (6,'73188'),
+    (7,'11977'),
+    (8,'83275'),
+    (9,'42466'),
+    (10,'28898');
+INSERT INTO bill(bill_id,client_id) 
+VALUES  
+    (11,'8303'),
+    (12,'60939'),
+    (13,'50651'),
+    (14,'71005'),
+    (15,'26902'),
+    (16,'59194');
+INSERT INTO bill(bill_id,client_id) 
+VALUES  
+    (17,'26073'),
+    (18,'6106'),
+    (19,'12723'),   
+    (20,'54165');

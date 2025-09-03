@@ -2999,4 +2999,5 @@ INSERT INTO product(sku,name,slug,description,price)
 ('3562846388218', 'Lightweight Steel Gloves', 'lightweight-steel-gloves', 'Fugit voluptatem aut distinctio porro. Id dolores sequi architecto. Ipsam impedit omnis dolorem delectus cum minima dolore.', '1937.87'),
 ('0510154539306', 'Rustic Steel Bag', 'rustic-steel-bag', 'Repudiandae voluptatem est dignissimos cupiditate ipsam nobis. Et accusantium a adipisci sit.', '2024.73'),
 ('7621986624412', 'Gorgeous Plastic Shirt', 'gorgeous-plastic-shirt', 'In distinctio est deleniti libero et odio. Aliquid qui fuga nihil numquam.', '4744.99'),
-('3274119381573', 'Durable Wooden Chair', 'durable-wooden-chair', 'Et et vero ut iste nulla soluta quae. Porro qui alias unde recusandae in.', '143.55');
+('3274119381573', 'Durable Wooden Chair', 'durable-wooden-chair', 'Et et vero ut iste nulla soluta quae. Porro qui alias unde recusandae in.', '143.55')
+ON CONFLICT (slug) DO NOTHING;

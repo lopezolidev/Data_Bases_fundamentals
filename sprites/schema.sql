@@ -1,44 +1,49 @@
-create database if not exists platzisql;
+CREATE DATABASE IF NOT EXISTS warehouse;
 
-use platzisql;
-create table if not exists clients (
-  client_id integer primary key auto_increment,
-  name varchar(100) not null,
-  email varchar(100) not null unique,
-  phone_number varchar(15),
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+USE warehouse;
+CREATE TABLE IF NOT EXISTS client (
+  client_id integer PRIMARY KEY SERIAL,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone_number VARCHAR(15),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table if not exists products (
-  `product_id` integer unsigned primary key auto_increment,
-  name varchar(100) not null,
-  sku varchar(20) not null,
-  slug varchar(200) not null unique,
-  description text,
-  price float not null default 0,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS product (
+  product_id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  sku VARCHAR(20) NOT NULL,
+  slug VARCHAR(200) NOT NULL UNIQUE,
+  description TEXT,
+  price FLOAT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- TRIGGER must be assigned to this table
 );
 
-create table if not exists bills (
-  bill_id integer unsigned primary key auto_increment,
-  client_id integer not null,
-  total float,
-  status enum('open', 'paid', 'lost') not null default 'open',
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS bill (
+  bill_id SERIAL PRIMARY KEY,
+  client_id INTEGER NOT NULL,
+  total FLOAT,
+  status status_enum NOT NULL DEFAULT 'open',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- TRIGGER must be assigned to this table
+);
+
+CREATE TABLE IF NOT EXISTS bill_product (
+  bill_product_id SERIAL PRIMARY KEY,
+  bill_id INTEGER NOT NULL,
+  product_id INTEGER NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  price FLOAT NOT NULL,
+  discount INTEGER NOT NULL DEFAULT 0,
+  date_added TIMESTAMP ,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- TRIGGER must be assigned to this table
 );
 
 
-create table if not exists bill_products (
-  bill_product_id integer unsigned primary key auto_increment,
-  bill_id integer unsigned not null,
-  product_id integer unsigned not null,
-  quantity integer not null default 1,
-  price float not null,
-  discount integer not null default 0,
-  date_added datetime,
-  created_at timestamp not null default CURRENT_TIMESTAMP,
-  updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
-);
+CREATE TRIGGER bill_product_modified_at_trigger
+BEFORE UPDATE ON bill_product
+FOR EACH ROW
+EXECUTE FUNCTION update_modified_at() ;
