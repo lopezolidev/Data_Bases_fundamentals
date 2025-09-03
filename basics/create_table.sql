@@ -102,12 +102,68 @@ CREATE TABLE IF NOT EXISTS bill (
     total FLOAT ,
     status status_enum DEFAULT 'open',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- a TRIGGER must be assigned for this update
+    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- a TRIGGER must be assigned for this update     
     CONSTRAINT fk_client_id FOREIGN KEY (client_id) 
     REFERENCES client(client_id) -- inline reference to parent table
+        ON UPDATE CASCADE
+        ON DELETE CASCADE -- added to keep referential integrity among client - bill tables
+    /*
+        thanks to this, when a register changes its id (rare) on client table, the register(s) that reference it in bill table
+        will be updated too.
+        Also when the registers in client table referenced in bill table are deleted, the referencing registers in bill table will
+        be deleted
+        ↓
+        ↓
+        this is changed onward altering the table and dropping the constraint
+    */
 );
 
 CREATE TRIGGER bill_modified_at_trigger
 BEFORE UPDATE ON bill
 FOR EACH ROW
 EXECUTE FUNCTION update_modified_at() ;
+
+/*-----------------------------------------------------------------------------------------------------------*/
+
+CREATE TABLE IF NOT EXISTS bill_product(
+    bill_product_id SERIAL PRIMARY KEY , -- in postgreSQL SERIAL makes it like unsigned by default, starts from 1 instead of 0
+    product_id INT NOT NULL ,
+    bill_id INT NOT NULL ,
+    quantity INT NOT NULL DEFAULT 1,
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id)
+    REFERENCES product(product_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_bill_id FOREIGN KEY (bill_id)
+    REFERENCES bill(bill_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+    /*
+        This "hard" relation then becomes "soft" by dropping this constraints
+    */
+);
+
+
+/*-----------------------------------------------------------------------------------------------------------*/
+
+
+ALTER TABLE bill
+DROP CONSTRAINT fk_client_id ;
+-- now 'bill' table won't have a reference to 'client' table, and therefore the relation becomes "soft"
+
+ALTER TABLE bill_product
+DROP CONSTRAINT fk_product_id,
+DROP CONSTRAINT fk_bill_id ;
+-- same here for product_id and bill_id → we can have bill_product records of products and bills that do not exist
+
+/*-----------------------------------------------------------------------------------------------------------*/
+-- we need to add the 'sku' column to product table and also modify name and slug
+
+ALTER TABLE product 
+ADD COLUMN sku VARCHAR(20) NOT NULL UNIQUE ;
+
+ALTER TABLE product 
+ALTER COLUMN name TYPE VARCHAR(50),
+ALTER COLUMN name SET NOT NULL, 
+ALTER COLUMN slug TYPE VARCHAR(50),
+ALTER COLUMN slug SET NOT NULL UNIQUE ;
