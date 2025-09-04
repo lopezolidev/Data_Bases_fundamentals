@@ -42,3 +42,7 @@ WHERE
     date_added BETWEEN '2024-06-02' AND '2024-06-30 14:50:00'
     AND
     product_id BETWEEN 1 AND 99;
+
+SELECT * 
+FROM client
+WHERE client_id = 150 ;
